@@ -2,22 +2,9 @@ import socket
 import sys
 
 port = 0
-host = '192.168.0.14'
-
+host = ''
 
 def listen(port):
-    # with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
-    #     sock.bind((host, port))
-    #     print('Listening...')
-    #     sock.listen()
-    #     conn, addr = sock.accept()
-    #     with conn:
-    #         print('Connected by', addr)
-    #         while True:
-    #             data = conn.recv(1024)
-    #             if not data:
-    #                 break
-    #             conn.sendall(data)
     s = socket.socket()
     s.bind((host, port))
     s.listen(5)
@@ -38,7 +25,6 @@ def listen(port):
             c.sendall(q.encode('utf-8'))
     menu()
 
-
 def myip():
     hostname = socket.gethostname()
     global host
@@ -56,7 +42,6 @@ def myport():
 
 
 def menu():
-    userinput = input("+MAIN MENU+\nWhatd'ya want?\n")
 
     if userinput == "help":
         print("help UNAVAILABLE\n")
@@ -86,7 +71,6 @@ def menu():
         print("INVALID INPUT\nPlease Enter a Valid Input")
         menu()
 
-
 def main():
     print("Welcome to Project #1")
     global port
@@ -94,7 +78,6 @@ def main():
     port = int(port)
     listen(port)
     menu()
-
 
 if __name__ == "__main__":
     main()

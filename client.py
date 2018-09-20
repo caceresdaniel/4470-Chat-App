@@ -1,4 +1,3 @@
-
 import socket
 
 s = socket.socket()
@@ -13,4 +12,4 @@ while True:
     s.sendall(z.encode('utf-8'))
     # Halts
     print ('[Waiting for response...]')
-    print (s.recv(1024))
+    # print (s.recv(1024))
