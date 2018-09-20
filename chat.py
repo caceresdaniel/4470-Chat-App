@@ -1,8 +1,6 @@
 import socket
 import sys
 
-
-
 def main(p):
 
     sock = socket.socket() 
@@ -84,7 +82,6 @@ def send():
 def terminate():
     print("not yet implemented")
     listener()
-
 
 if __name__== "__main__":
     main(sys.argv[1])
