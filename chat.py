@@ -1,18 +1,11 @@
 import socket
+import threading
 import sys
 
 def main(p):
-
-    sock = socket.socket() 
-    host = socket.gethostname() 
-    global port
-    port = int(p)
-    sock.bind((host,port))
-    sock.listen(5)
-    connection = None
-
     listener()
 
+# Method that Listens for commands and calls the command that has been entered
 def listener():
     ex = True
     listener = input()
@@ -28,8 +21,8 @@ def listener():
         elif(listener == 'myport'):
             myport()
             break
-        elif(listener == 'connect'):
-            connect()
+        elif("connect" in listener):
+            connect(listener)
             break
         elif(listener == 'list'):
             cList()
@@ -43,9 +36,38 @@ def listener():
         elif(listener == 'exit'):
             exit()
         else:
+            print("unrecognized command")
+            listener()
+
+def serverinit():
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    sock.bind((host, port))
+    sock.listen(1)
+    connections = []
+
+    while True:
+        c, a = sock.accept()
+        # creates a new thread and passes the function that runs the thread
+        cThread = threading.Thread(target = handler)
+        # allows to close the program regardless if there are threads running
+        cThread.daemon = True
+        cThread.start()
+        connections.append(c)
+
+def handler(c, a):
+    global connections
+    while True:
+        data = c.recv(1024)
+        # this is when the message is sent 
+        for connection in connections:
+            connection.send(bytes(data))
+
+        if not data:
+            connetions.remove(c)
+            c.close()
             break
 
-
+# Method that lists all the commands available
 def help():
     print("myip display IP address")
     print("myport display Port")
@@ -56,6 +78,7 @@ def help():
     print("exit exits program")
     listener()
 
+# Method that lists your IP address
 def myip():
     hostname = socket.gethostname()
     global host
@@ -63,25 +86,33 @@ def myip():
     print("The IP address is: ", host, "\n")
     listener()
 
+# Method that lists your port
 def myport():
     print("The program runs on port ", port)
     listener()
 
-def connect():
+# Method that connects you to another user by sending an IP and Port
+def connect(conString):
+    # parse 
+    print(conString)
     print("not yet implemented")
     listener()
 
+# Method that Lists all peer connections
 def cList():
     print("not yet implemented")
     listener()
 
+# Method that sends a message to a specific peer
 def send():
     print("not yet implemented")
     listener()
 
+# Method that ends a connection to a peer
 def terminate():
     print("not yet implemented")
     listener()
 
+# This allows the program to start with an argument 
 if __name__== "__main__":
     main(sys.argv[1])
