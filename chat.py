@@ -2,8 +2,18 @@ import socket
 import threading
 import sys
 
+port = 0
+hostname = socket.gethostname()
+host = socket.gethostbyname(hostname)
+sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+connections = []
+c, a = sock.accept()
+
 def main(p):
-    listener()
+	global port
+	port = int(p)
+	serverinit()
+	listener()
 
 # Method that Listens for commands and calls the command that has been entered
 def listener():
@@ -40,32 +50,35 @@ def listener():
             listener()
 
 def serverinit():
-    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    sock.bind((host, port))
-    sock.listen(1)
-    connections = []
-
-    while True:
-        c, a = sock.accept()
-        # creates a new thread and passes the function that runs the thread
-        cThread = threading.Thread(target = handler)
-        # allows to close the program regardless if there are threads running
-        cThread.daemon = True
-        cThread.start()
-        connections.append(c)
+	global host
+	global port
+	global connections
+	global sock
+	global c,a
+	sock.bind((host, port))
+	cThread = threading.Thread(target= handler(c, a))
+	cThread.daemon = True
+	cThread.start()
 
 def handler(c, a):
-    global connections
-    while True:
-        data = c.recv(1024)
-        # this is when the message is sent 
-        for connection in connections:
-            connection.send(bytes(data))
+	global connections
+	global sock
 
-        if not data:
-            connetions.remove(c)
-            c.close()
-            break
+	sock.listen(1)
+	
+	print(a)
+	print(c)
+
+	# while True:
+	# 	data = c.recv(1024)
+	# 	# this is when the message is sent will have to edit this to send to specific connection
+	# 	for connection in connections:
+	# 		connection.send(bytes(data))
+	# 	if not data:
+	# 		print(str(a[0]) + ':' + str(a[1]), "disconnected")
+	# 		connetions.remove(c)
+	# 		c.close()
+	# 		break
 
 # Method that lists all the commands available
 def help():
@@ -80,16 +93,15 @@ def help():
 
 # Method that lists your IP address
 def myip():
-    hostname = socket.gethostname()
     global host
-    host = socket.gethostbyname(hostname)
     print("The IP address is: ", host, "\n")
     listener()
 
 # Method that lists your port
 def myport():
-    print("The program runs on port ", port)
-    listener()
+	global port
+	print("The program runs on port ", port)
+	listener()
 
 # Method that connects you to another user by sending an IP and Port
 def connect(conString):
