@@ -63,7 +63,7 @@ def handler(c, a):
             connection.send(bytes(data))
 
         if not data:
-            connetions.remove(c)
+            connections.remove(c)
             c.close()
             break
 
