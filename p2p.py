@@ -1,14 +1,11 @@
 import select, socket, sys
 import threading
 
-# made socket class variable
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 connections = []
 
 
 class Server:
-    peers = []
-
     def __init__(self, port):
         host = socket.gethostname()
         try:
@@ -23,17 +20,10 @@ class Server:
         print('server is running')
         listener()
 
-    def handler(self,c,a):
-        print("handler")
-        # while True:
-        #     data = c.recv(1024)
-        #     for connection in connections:
-        #         connection.send((data))
-        #     if not data:
-        #         print('IP: ', str(a[0]) + '\nPort:' + str(a[1]), "disconnected")
-        #         connections.remove(c)
-        #         c.close()
-        #         break
+    def handler(self, c ,a):
+        while True:
+            data = c.recv(1024)
+            print(data.decode("utf-8"))
 
     def run(self):
         while True:
@@ -41,48 +31,37 @@ class Server:
             cThread = threading.Thread(target=self.handler, args=(c,a))
             cThread.daemon = True
             cThread.start()
-            connections.append(c.getpeername())
+            connections.append(c)
             print('The connection to peer ', c.getpeername()[0], ' is successfully established ')
 
 
-
-
-
 class Client:
-    #host = socket.gethostname()
-    client_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
+    def handler2(self, c, a):
+        while True:
+            data = c.recv(1024)
+            print(data.decode("utf-8"))
 
-
-# Main problem: When we have to use the socket to connect, we can't use the inital socket we created when we started
-# the chat.py app. I get a OSError. So we have to create a new socket to connect. The problem is we lose
-# the port number associated with the old socket. Hence the new port number when the connection is establish.
-# When u run the client app, run myport then do the connect. the port number is different.
-# The prompt says:
-# The output should display the IP address and the listening port of all the peers the process is connected to.
     def __init__(self, IPandPort):
+        client_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
         try:
-            self.client_sock.connect(IPandPort)
+            print('Connecting...')
+            client_sock.connect(IPandPort)
         except WindowsError:
             print('Connect failed.')
             return
         print('client started')
-        print('The connection to peer ', self.client_sock.getpeername()[0], ' is successfully established ')
+        print('The connection to peer ', client_sock.getpeername()[0], ' is successfully established ')
+        cThread = threading.Thread(target=self.handler2, args=(client_sock,None))
+        cThread.daemon = True
+        cThread.start()
+        connections.append(client_sock)
 
-        connections.append(self.client_sock.getpeername())
-        #This won't work but it should cuz its using the old port
-        #sock.connect(IPandPort)
 
-        #
-        # while True:
-        #         data = self.sock.recv(1024)
-        #         if not data:
-        #                 break
-        #         print(data)
 
-    def sendMsg(self, message):
-        while True:
-            sock.send(bytes(message, 'utf-8'))
+def sendMsg(index, message):
+    connections[index].send(bytes(message, 'utf-8'))
 
 
 def main(p):
@@ -90,37 +69,42 @@ def main(p):
     myServer.run()
     listener()
 
+def invalid():
+    print("Error Invalid command")
+    listener()
+
 def listener():
     print("listener")
     listener = input()
     listener = listener.lower()
+    validCommands = ['help', 'myip', 'myport', 'list', 'terminate', 'exit', 'connect', 'send']
 
     while(True):
-        if(listener == 'help'):
+        if listener == 'help':
             help()
             break
-        elif(listener == 'myip'):
+        elif listener == 'myip':
             myip()
             break
-        elif(listener == 'myport'):
+        elif listener == 'myport':
             myport()
             break
-        elif ("connect" in listener):
+        elif "connect" in listener:
             connect(listener)
             break
-        elif(listener == 'list'):
+        elif listener == 'list':
             cList()
             break
-        elif(listener == 'send'):
-            send()
+        elif "send" in listener:
+            send(listener)
             break
-        elif(listener == 'terminate'):
+        elif listener == 'terminate':
             terminate()
             break
-        elif(listener == 'exit'):
+        elif listener == 'exit':
             exit()
-        else:
-            print('ERROR!!!!!!')
+        elif listener not in validCommands:
+            invalid()
             break
 
 
@@ -157,12 +141,15 @@ def connect(conString):
 def cList():
     print('id: \t IP address \t Port No.')
     for x in range(len(connections)):
-        print(x+1, '\t', connections[x][0], '\t',  connections[x][1])
+        print(x+1, '\t', connections[x].getpeername()[0], '\t',  connections[x].getpeername()[1])
     listener()
 
 
-def send():
-    print("not yet implemented")
+def send(senString):
+    sendInfo = senString.split(" ", 2)
+    index = int(sendInfo[1])
+    msg = ''.join(sendInfo[2:])
+    sendMsg(index, msg)
     listener()
 
 
