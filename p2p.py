@@ -42,9 +42,7 @@ class Server:
             cThread.daemon = True
             cThread.start()
             connections.append(c.getpeername())
-            print('SERVER: ')
-            print('address: ', c)
-            print(a)
+            print('The connection to peer ', c.getpeername()[0], ' is successfully established ')
 
 
 
@@ -69,9 +67,8 @@ class Client:
             print('Connect failed.')
             return
         print('client started')
+        print('The connection to peer ', self.client_sock.getpeername()[0], ' is successfully established ')
 
-        print(self.client_sock.getpeername())
-        print(self.client_sock.getsockname())
         connections.append(self.client_sock.getpeername())
         #This won't work but it should cuz its using the old port
         #sock.connect(IPandPort)
