@@ -11,7 +11,11 @@ class Server:
 
     def __init__(self, port):
         host = socket.gethostname()
-        sock.bind((host, port))
+        try:
+            sock.bind((host, port))
+        except WindowsError:
+            print('Failed to create socket')
+            exit()
         sock.listen(1)
         iThread = threading.Thread(target=self.run)
         iThread.daemon = True
@@ -20,48 +24,55 @@ class Server:
         listener()
 
     def handler(self,c,a):
-        while True:
-            data = c.recv(1024)
-            for connection in self.connections:
-                connection.send((data))
-            if not data:
-                print('IP: ', str(a[0]) + '\nPort:' + str(a[1]), "disconnected")
-                connections.remove(c)
-                c.close()
-                break
+        print("handler")
+        # while True:
+        #     data = c.recv(1024)
+        #     for connection in connections:
+        #         connection.send((data))
+        #     if not data:
+        #         print('IP: ', str(a[0]) + '\nPort:' + str(a[1]), "disconnected")
+        #         connections.remove(c)
+        #         c.close()
+        #         break
 
     def run(self):
         while True:
-                c, a = sock.accept()
-                cThread = threading.Thread(target=self.handler, args=(c,a))
-                cThread.daemon = True
-                cThread.start()
-                connections.append(c)
-                print('IP: ', str(a[0]) + '\nPort:' + str(a[1]), "connected")
+            c, a = sock.accept()
+            cThread = threading.Thread(target=self.handler, args=(c,a))
+            cThread.daemon = True
+            cThread.start()
+            connections.append(c.getpeername())
+            print('SERVER: ')
+            print('address: ', c)
+            print(a)
 
 
 
 
 
 class Client:
-    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     #host = socket.gethostname()
-
-    # def sendMsg(self):
-    #         while True:
-    #             sock.send(bytes(input(""), 'utf-8'))
+    client_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 
-#Main problem: When we have to use the socket to connect, we can't use the inital socket we created when we started
-#the chat.py app. I get a OSError. So we have to create a new socket to connect. The problem is we lose
-#the port number associated with the old socket. Hence the new port number when the connection is establish.
-#When u run the client app, run myport then do the connect. the port number is different.
-#The prompt says:  The output should display the IP address and the listening port
-# of all the peers the process is connected to.
+
+# Main problem: When we have to use the socket to connect, we can't use the inital socket we created when we started
+# the chat.py app. I get a OSError. So we have to create a new socket to connect. The problem is we lose
+# the port number associated with the old socket. Hence the new port number when the connection is establish.
+# When u run the client app, run myport then do the connect. the port number is different.
+# The prompt says:
+# The output should display the IP address and the listening port of all the peers the process is connected to.
     def __init__(self, IPandPort):
+        try:
+            self.client_sock.connect(IPandPort)
+        except WindowsError:
+            print('Connect failed.')
+            return
         print('client started')
-        self.sock.connect(IPandPort)
 
+        print(self.client_sock.getpeername())
+        print(self.client_sock.getsockname())
+        connections.append(self.client_sock.getpeername())
         #This won't work but it should cuz its using the old port
         #sock.connect(IPandPort)
 
@@ -71,6 +82,10 @@ class Client:
         #         if not data:
         #                 break
         #         print(data)
+
+    def sendMsg(self, message):
+        while True:
+            sock.send(bytes(message, 'utf-8'))
 
 
 def main(p):
@@ -108,6 +123,7 @@ def listener():
         elif(listener == 'exit'):
             exit()
         else:
+            print('ERROR!!!!!!')
             break
 
 
@@ -143,8 +159,8 @@ def connect(conString):
 
 def cList():
     print('id: \t IP address \t Port No.')
-    for x in connections:
-        print(x)
+    for x in range(len(connections)):
+        print(x+1, '\t', connections[x][0], '\t',  connections[x][1])
     listener()
 
 
@@ -158,5 +174,5 @@ def terminate():
     listener()
 
 
-if __name__== "__main__":
+if __name__ == "__main__":
     main(sys.argv[1])
