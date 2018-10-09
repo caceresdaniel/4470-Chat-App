@@ -33,7 +33,7 @@ class Server:
             print(data.decode("utf-8"))
             if not data:
                 print('Peer ', c.getpeername[0], ' terminates the connection')
-                self.connections.remove(c)
+                connections.remove(c)
                 c.close()
                 break
 
@@ -118,8 +118,6 @@ def listener():
             terminate(listener)
             break
         elif listener == 'exit':
-            for c in connections:
-                connections.remove(c)
             exit()
         elif listener not in validCommands:
             invalid()
@@ -171,8 +169,9 @@ def send(senString):
 #terminated the specified connetion
 def terminate(termString):
     termInfo = termString.split(" ")
-    c = termInfo[1] - 1
-    connections.remove(c)
+    c = int(termInfo[1]) - 1
+    connections[c].close
+    del connections[c]
     listener()
 
 #just says invalid command when an invalid command was input in the program
