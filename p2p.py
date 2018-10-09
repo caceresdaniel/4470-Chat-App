@@ -40,6 +40,7 @@ class Server:
             cThread.daemon = True
             cThread.start()
             connections.append(c)
+            print('The connection to peer ', c.getpeername()[0], ' is successfully established ')
 
 #handles the client side of the program such as sending messages to the server, and connections
 class Client:
@@ -68,7 +69,9 @@ class Client:
 
 #function that sends the message from a specific socket 
 def sendMsg(index, message):
-    connections[index].send(bytes(message, 'utf-8'))
+    i = index - 1
+    connections[i].send(bytes(message, 'utf-8'))
+    
 
 #where the program first starts to run
 #creates instance of the server and sends the port that was passed in as an argument and
