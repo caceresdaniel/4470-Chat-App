@@ -31,6 +31,11 @@ class Server:
         while True:
             data = c.recv(1024)
             print(data.decode("utf-8"))
+            if not data:
+                print('Peer ', c.getpeername[0], ' terminates the connection')
+                self.connections.remove(c)
+                c.close()
+                break
 
     #function that accepts the connection from the client and adds the connection to the list of sockets
     def run(self):
@@ -65,7 +70,10 @@ class Client:
     def handler2(self, c, a):
         while True:
             data = c.recv(1024)
+            if not data:
+                break
             print(data.decode("utf-8"))
+
 
 #function that sends the message from a specific socket 
 def sendMsg(index, message):
@@ -106,10 +114,12 @@ def listener():
         elif "send" in listener:
             send(listener)
             break
-        elif listener == 'terminate':
-            terminate()
+        elif "terminate" in listener:
+            terminate(listener)
             break
         elif listener == 'exit':
+            for c in connections:
+                connections.remove(c)
             exit()
         elif listener not in validCommands:
             invalid()
@@ -159,8 +169,10 @@ def send(senString):
     listener()
 
 #terminated the specified connetion
-def terminate():
-    
+def terminate(termString):
+    termInfo = termString.split(" ")
+    c = termInfo[1] - 1
+    connections.remove(c)
     listener()
 
 #just says invalid command when an invalid command was input in the program
