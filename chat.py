@@ -29,12 +29,22 @@ class Server:
     #this is the part of code where the server receives the message from the client
     def handler(self, c ,a):
         while True:
-            data = c.recv(1024)
-            print(data.decode("utf-8"))
+            #added try/except for when a client disconnects in a weird way
+            try:
+                data = c.recv(1024)
+                print(data.decode("utf-8"))
+            except socket.error:
+                print('Peer ', c.getpeername()[0] ,' terminates the connection')
+                if len(connections) > 0 and c in connections:
+                    connections.remove(c)
+                    c.close()
+                return
+            #checks to see if it receiving data from a socket if is not receiving data the socket is then removed and closed
             if not data:
-                print('Peer ', c.getpeername[0], ' terminates the connection')
-                connections.remove(c)
-                c.close()
+                print('Peer ', c.getpeername()[0] ,' terminates the connection')
+                if len(connections) > 0 and c in connections:
+                    connections.remove(c)
+                    c.close()
                 break
 
     #function that accepts the connection from the client and adds the connection to the list of sockets
@@ -66,11 +76,22 @@ class Client:
         cThread.start()
         connections.append(client_sock)
 
-    #handler used to receive the message from the server and then sends to a specific client
+    #handler used to receive the message from the server and then sends to a specific client almost same as server handler
     def handler2(self, c, a):
         while True:
-            data = c.recv(1024)
+            try: 
+                data = c.recv(1024)
+            except socket.error:
+                print('Peer ', c.getpeername()[0] ,' terminates the connection')
+                if len(connections) > 0 and c in connections:
+                    connections.remove(c)
+                    c.close()
+                return
             if not data:
+                print('Peer ', c.getpeername()[0], ' terminate the connection')
+                if len(connections) > 0 and c in connections:
+                    connections.remove(c)
+                    c.close()
                 break
             print(data.decode("utf-8"))
 
@@ -118,6 +139,12 @@ def listener():
             terminate(listener)
             break
         elif listener == 'exit':
+            #closes all peer connections when the exit command is given
+            for c in connections:
+                #shuts down the reading and writing side of the socket, shutdown is basically advisory to the socket at the other end that it is closing
+                c.shutdown(socket.SHUT_RDWR)
+                #finalizes the closing of the socket 
+                c.close
             exit()
         elif listener not in validCommands:
             invalid()
@@ -166,10 +193,13 @@ def send(senString):
     sendMsg(index, msg)
     listener()
 
-#terminated the specified connetion
+#terminates specific peer connection by first splitting the string received into needed values
+# it then shuts down both the reading and writing end of the specific socket, and then closes the 
+#connection, finally removing the connection from the list of sockets.
 def terminate(termString):
     termInfo = termString.split(" ")
     c = int(termInfo[1]) - 1
+    connections[c].shutdown(socket.SHUT_RDWR)
     connections[c].close
     del connections[c]
     listener()
