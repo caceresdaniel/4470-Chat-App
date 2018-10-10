@@ -1,0 +1,185 @@
+Slides 1
+What is internet
+    - millions of connected computing devices 
+    - hosts = end systems 
+    - infrastructure that provides services to applications 
+    - provids programming interface to apps
+    - network of networks 
+whats a protocol
+    - define format order of msgs send and received among netowrk entities and 
+        actions taken on msg transmission, receipt 
+network structure
+    - network edge = hosts clients and servers serves often in data centers
+    - way to access networks physical media, wired wireless communication links
+    - network core = interconnected routers network of networks 
+Slides 2 
+wireless access networks 
+    - shared wireless access network connects end system to router 
+    - LANS 100ft radius spped 54 mbps 
+    - wide area wireless access 10's km speed 1-10mps 4g/lte 5g
+Radio
+    - signal is carred in electromagnetics spectrum
+    - bidirectional
+    - propagation environment effects: reflection, obstruction by objects, interference 
+    - radio link types: terrestrial microwave(45mbps channels)
+        - LAN - 11mps, 54mbps
+        - wide area 3g cellular 
+        - satelite kbps to 45 mbps 270msec end to end delay 
+Fiber, coax
+    - coax two concentric copper conductors, bidirectional, boradband (multiple channels on cable)
+    - fiber glass fiber carrying lfight pulses each pulse is a bit, high speed operation 10-100s of gbps transmission rate
+        low error rate
+DIFFERENCE BETWEEN CORE AND HASH NETWORK
+network core
+    - mesh of interconnected routers 
+    - hosts break application layer messages into packets 
+        forwawrd packets from one router to the next across links on path from source
+        to destination
+hosts 
+    - send packets of data, takes application messages
+    - breaks into smaller chunks known as packets of length l bits
+    - transmits packet into access network at transmission rate R
+    FORMULA 
+    time needed to transmit L-bit packet into link = L(bits) / R(bits/sec)
+VERY IMPORTANT 
+Packet switching store and forward 
+    - takes L/R seconds to transmit L-bit packet into link at R bps
+    - store and foreward - entire packet must arrive at router before it can be trasmitted on next link
+    - each packet is transmitted at full link capacity 
+Packet loss occurence because packet arrival rate to link temporarily exceeds output link capacity 
+    which causes a queue for packets to wait their turn
+    loss occurs when there are no free buffers 
+COMPARE CIRCUIT AND PACKET SWITCHING 
+Circuit switching 
+    - end to end resources allocated to reserved for call between source and destination 
+    - dedicated resources no sharing, circuit like guaranteed performance
+    - circuit segment idle if not used by call
+    - commonly used in traditional telephone networks
+Packet switching 
+    - good for bursty data 
+    - resource sharing 
+    - simpler no call setup
+    - excessive congestion possible: packet delay and loss 
+        - protocals needed for reliable data transfer congestion control
+
+1-12 similar q's'
+1-14 similar q'similar
+
+Slides 3
+1-13
+Packet switching 
+    - queuing and loss: if arrival rate to link exceeds trasnmission rate of link for a period of time
+        - packets will queue wait to be trasmitted on link
+        - packets can be dropped if memory (buffer) fills up
+1-14 very important calculation questions on this 
+d nodal = d proc + d queue + d trans + d prop
+1-16 question 
+
+slides 4
+Throughput 
+    - rate at which bits transferred between sender and receiver 
+        - instantaneous - rate at given point in time
+        - average - rate over longer period of time
+        server sends bits into pipe -> pipe can carry fluid at rate Rs b/s -> pipe that can carry fluid at rate Rc b/s
+internet protocol stack
+    - application: supporting network applications 
+        - ftp smtp http
+    - transport: process-process data transfer 
+        - tcp udp
+    - netowkr: routing of datagrams from source to destination 
+        - ip routing protocols 
+    - link - data transfer between neighboring network elements 
+    - physical: bits on the wire
+DDos 
+    - attackers make resources unavailable to legitimate traffic by overwhelimg resource with bogus traffic 
+Packet sniffing 
+    - promiscuous network interface reads/records all packets 
+IP spoofing 
+    - send packet with false source address
+1-10 question
+
+slides 5
+Application architectures 
+    - client server 
+    - peer to peer
+2-6
+2-9
+2-12
+2-14 main identifiers in socket, ip protocol
+2-17 draw interaction
+2-21 dif between tcp and udp maybe draw
+
+slides 7
+2-4 what is requirements for different apps
+2-5 comparisons tcp udp
+2-6
+2-8 
+2-11 calc questions
+what is rtt
+2-18 a, c
+
+slides 8
+2-2 
+2-3
+2-5
+2-7 where store what is 
+2-9
+2-10 how it works, benefits
+2-12 how to calc avg delay 
+2-17
+2-18 why two ports for ftp
+
+slides 9
+2-4 
+2-6 figure and name activities in steps
+2-8  what kind of service
+2-9 why not scalable
+2-10 real world 
+2-12
+2-13
+2-14
+2-15 iterated  tell difference what are improvements, need to know how to describe draw it 
+2-20 how p2p file distrubtion works
+2-21
+
+slides 10
+3-4 what is transport comunication 
+3-5 
+3-7 how multi and demu works, using port numbers to differentiate 
+3-11
+3-12 why there is udp small header faster connection time
+how to recover from bit errors, using acknoledgement system to recover from bit errors
+RDT 2.0
+3-21
+
+slides 11
+RDT 3.0 
+3-30 adding timer 
+
+slides 12?
+rdt3.0 efficency very low  
+3-4 pipe line increases utilization
+3-6 go back n , selective
+3-7
+3-9 compare 
+3-14 
+3-15 3 way handshake 
+3-17 closing connection steps
+3-19
+3-20 important in practice but dont need for test
+3-21 
+
+slide 6-2
+3-3
+3-4 flow control
+3-6 issues that cause congestion 
+3-9
+3-10
+3-11 triple duplicate acknoledgementG
+3-13
+3-14
+3-15
+inclass practice 
+
+
+
