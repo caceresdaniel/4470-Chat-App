@@ -3,19 +3,20 @@ What is internet
     - millions of connected computing devices 
     - hosts = end systems 
     - infrastructure that provides services to applications 
-    - provids programming interface to apps
+    - provides programming interface to apps
     - network of networks 
 whats a protocol
-    - define format order of msgs send and received among netowrk entities and 
+    - define format order of msgs send and received among network entities and 
         actions taken on msg transmission, receipt 
 network structure
     - network edge = hosts clients and servers serves often in data centers
     - way to access networks physical media, wired wireless communication links
     - network core = interconnected routers network of networks 
+
 Slides 2 
 wireless access networks 
     - shared wireless access network connects end system to router 
-    - LANS 100ft radius spped 54 mbps 
+    - LANS 100ft radius speed 54 mbps 
     - wide area wireless access 10's km speed 1-10mps 4g/lte 5g
 Radio
     - signal is carred in electromagnetics spectrum
@@ -27,13 +28,13 @@ Radio
         - satelite kbps to 45 mbps 270msec end to end delay 
 Fiber, coax
     - coax two concentric copper conductors, bidirectional, boradband (multiple channels on cable)
-    - fiber glass fiber carrying lfight pulses each pulse is a bit, high speed operation 10-100s of gbps transmission rate
+    - fiber glass fiber carrying light pulses each pulse is a bit, high speed operation 10-100s of gbps transmission rate
         low error rate
 DIFFERENCE BETWEEN CORE AND HASH NETWORK
 network core
     - mesh of interconnected routers 
     - hosts break application layer messages into packets 
-        forwawrd packets from one router to the next across links on path from source
+        forward packets from one router to the next across links on path from source
         to destination
 hosts 
     - send packets of data, takes application messages
@@ -49,7 +50,7 @@ Packet switching store and forward
 Packet loss occurence because packet arrival rate to link temporarily exceeds output link capacity 
     which causes a queue for packets to wait their turn
     loss occurs when there are no free buffers 
-COMPARE CIRCUIT AND PACKET SWITCHING 
+COMPARE CIRCUIT AND PACKET SWITCHING - circuit switching does not share when packet does
 Circuit switching 
     - end to end resources allocated to reserved for call between source and destination 
     - dedicated resources no sharing, circuit like guaranteed performance
@@ -118,57 +119,53 @@ P2P architecture
     - peers request service from other peers provide service in return to other peers
     - peers are intermittently connected and change ip addresses   
 Sockets 
-    - process sends receives messages tof rom its socket 
+    - process sends receives messages to from its socket 
     - socket like door 
         - sending process shoves messages out door 
-        - sending process relies on transport infrastructure on other side of door to deliver message to sockat at receiving process
+        - sending process relies on transport infrastructure on other side of door to deliver message to sock at at receiving process
 main identifiers in a socket are the ip and port 
 2-17 draw interaction
-tcp
+
+slides 7(4-1)
+Requirements 
+    - file transfer no data loss elastic throughput not time sensitive
+    - email no data loss elastic throughput not time sensitive
+    - web documents no data loss elastic throughput not time sensitive
+    - real time audio/ video through put - aud 5kbps - 1mpbs video 10kbps - 5mps, yes sensitive to time 100's msec
+    - stored audio/video, loss tolerant same as before yes time sensitive few seconds
+    - games loss tolerant, through put is few kbps up, time sensitive 100's msec
+    - text messaging no loss, elastic throughput , yes and no
+tcp 
     - client must contact server 
     - server process must first be running 
     - server must have created socket that welcomes clients contact
     - client contacts servery by creating tcp socket specifying ip and port number of server process
     - client tcp establishes to server tcp
     - when contacted by client server tcp creates new socket for server process to communicate with that particular client 
-    - allows server to talk woth multiple clients 
-    - source port numbrs used to distinguish clients 
+    - allows server to talk with multiple clients 
+    - source port numbers used to distinguish clients 
     - provides reliable in order byte stream transfer between client and server
+    - reliable transport between sending and receiving process
+    - flow control sender wont overwhelm receiver
+    - congestion control - throttle sender when network overloaded
+    - does not provide timing minimum through put guarantee security
+    - connection oriented setup required between client and server processes
+    - one sender one receiver
+    - in order byte stream
+    - piplined 
+    - full duplex data 
+        - bi directional data flow in same connection
+        - mss maximum segment size
+    - connection oriented 
+        - handshaking initiates sender receiver state before data exchange 
 udp 
     - no connection between client and server
     - no handshaking before sending data    
     - sender explicitly attaches ip and port to each packet
     - recvr extracts sender ip addres and port from packet
     - trasmitted data may be lost or received out of order 
-    - unreliable
-
-slides 7(4-1)
-Requirements 
-    - file transfer no data loss elastic throughput not time sensitive
-    - emal no data loss elastic throughput not time sensitive
-    - web documents no data loss elastic throughput not time sensitive
-    - real time audio/ video through put - aud 5kbps - 1mpbs video 10kbps - 5mps, yes sensitive to time 100's msec
-    - stored audio/bideo, loss tolerant same as before yes time sensitive few seconds
-    - games loss tolerant, through put is feew kbps up, time sensitive 100's msec
-    - text messaging no loss, elastic throughput , yes and no
-tcp 
-    - reliable transport between sending andreceiving process
-    - flow control sender wont overwhelm receiver
-    - congestion control - throttle sender when network overloaded
-    - does not provide timing minimum through put guarantee security
-    - connection oriented setup required between client and server processes
-    - one sender one receiver
-    - in order bystream
-    - piplined 
-    - full duplex data 
-        - bi directional data flow in same connection
-        - mss maximum segment size
-    - connection oriented 
-        - handshaking inits sender revericer state before data exchange 
-    - flow controlled sender will not overwhelm receiver
-udp 
     - unreliable data transfer between sending and receiving process
-    - does not provide reliability flow cont4orl congestion contro.l timing through ut guarantee security or connection setup
+    - does not provide reliability flow control congestion control timing through put guarantee security or connection setup
     - add reliablity at application layer 
     - application specific error recovery
     - no connection establishment which can add delay
@@ -197,14 +194,14 @@ RTT
 
 slides 8 (5-1)
 HTTP request message   
-    - request  and response 
+    - request and response 
 Method types 
     - HTTP 
         - post
         - delete 
         - get
         - put
-    - restful apis based onhttp
+    - restful apis based on http
     - json format
     - xml format 
 HTTP response status codes
@@ -217,7 +214,7 @@ HTTP response status codes
 cookies 
     - four components 
         - cookie header line of http response message
-        - cooke header in request 
+        - cookie header in request 
         - cookie file kept on users host managed by users browser
         - back end database at website
         - site creates unique id and entry in backend database for id
@@ -233,13 +230,13 @@ Web caches
     - satisfy client request without involving origin server
     - user sets browser web access via caches
     - browser sends all http requests to cache 
-        - object in cache cache returns object 
+        - object in cache, cache returns object 
         - else cache requests object from origin server then returns object to client 
-    - cache acts as both clent and server
+    - cache acts as both client and server
     - installed by isp 
     - reduce response time for client request 
     - reduce traffic on an institutions access link
-    - internet dence with caches enables poor content providers to effectively dilver content 
+    - internet dense with caches enables poor content providers to effectively dilver content 
 FTP
     - transfer file to from remote host
     - client server model
@@ -267,11 +264,11 @@ DNS
     - host aliasing 
     - mail server aliasing
     - load distribution
-        - replicated webs ervers many ip addresses correspond to one name
+        - replicated web servers many ip addresses correspond to one name
 why DNS not scalable
     - single point of failure
     - traffic volume 
-    - ditant centralized database
+    - distant centralized database
     - maintenance
 query dns server then query type of dns server (org com edu) then query actual website, then query for ip
 TLD authoritative servers  
@@ -283,9 +280,9 @@ TLD authoritative servers
         - organizations own dns servers providing authoritative hostname to ip mappings for organizations named hosts
         - can be maintained by organization or service providers
 Local DNS name server
-    - dos not strictly belong to heierarchy 
+    - does not strictly belong to heierarchy 
     - each isp has one called defualt name server
-    - when host makes dns query query is sent to its local dns server
+    - when host makes dns query, query is sent to its local dns server
         - has local cache of recent name to address translation pairs
         - acts as proxy forwards query into hierarchy
 DNS name resolution 
@@ -310,22 +307,22 @@ slides 10
 what is transport comunication 
     - provides logical communication between app processes running on different hosts 
     - trasnport protocols run in end systems 
-        - send side breaks app messges into segmens passes to network  layer
+        - send side breaks app messges into segments passes to network  layer
         - rcv side reassembles segments into messages passes to app layer
     - more then one transport protocol available to apps 
         - tcp and udp
 transport vs network layer
     - network layer logical communication between hosts
-    - transport layer locigal communication between processes
+    - transport layer logical communication between processes
 3-7 how multi and demu works, using port numbers to differentiate 
     - multiplexing at sender   
-        - handle data from multiple sockets add transport header laster used for demulti
+        - handle data from multiple sockets add transport header later used for demulti
     - demultiplexing at receiver 
         - use header info to deliver received segments to correct socket 
 why there is udp small header faster connection time
 how to recover from bit errors, using acknoledgement system to recover from bit errors
 RDT 2.0
-    - underlying channel may flip bits in packet   
+    - underlying issue channel may flip bits in packet   
         - checksum to detect bit errors
         - uses acknowledgements: receiver explicitly tells snder that pkt received is ok
         - neg ack - receiver explicitly tells sender that pkt had errors
@@ -341,14 +338,14 @@ adding timer
         - receiver must specify seq # of pkt being acknoledged
     - requires countdown timer
 
-slides 12?
+slides 12 7-1
 rdt3.0 efficency very low  
 3-4 pipe line increases utilization
 pipelined protocols
     - pipelining sender allows multiple in flight yet to be acked packets
         - range of seq numbers must be increased 
         - buffering at sender and or receiver
-    - two generic ofrms of piplined protocols go-back-n, selective reapeat 
+    - two generic forms of piplined protocols go-back-n, selective reapeat 
 3-6 go back n 
     - sender can have up to n unacked packets in pipline 
     - receiver only sends cumulative ack
@@ -392,7 +389,7 @@ TCP seq numbers acks
 slide 6-2
 TCP flow control    
     - application may remove data from tcp socket buffers
-    - receiver controls sender so s4ender wont overflow receivers buffer by transmitting too  much too fast
+    - receiver controls sender so sender wont overflow receivers buffer by transmitting too  much too fast
     - receiver advertises free buffer space by including rwnd value in tcp header of receiver to sender segments 
         - default is 4096 bytes
     - sender limits amount of unacked data to reveicer rwnd value
@@ -404,11 +401,11 @@ TCP flow control
         - lost packets buffer overflow at routers
         - long delays queue in router buffers
 TCP congestion control  
-    - approach sender increases transmission rate probing for usable bandwith until loss ocures
+    - approach sender increases transmission rate probing for usable bandwith until loss occurs
         - additive increase increase cwnd by 1 mss every RTT until loss detected 
         - multiplicative decrease cut cwnd in half after loss
 TCP slow start
-    - when connection begins increase rate exponentialy until first loss eventuial
+    - when connection begins increase rate exponentialy until first loss eventual
     - intial rate is slow but ramps up exponentialy fast
 3-11 triple duplicate acknoledgement
     - resend unacked segment with smallest seq # 
