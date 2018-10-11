@@ -98,88 +98,341 @@ IP spoofing
     - send packet with false source address
 1-10 question
 
-slides 5
+slides 5 (3-2)
 Application architectures 
     - client server 
     - peer to peer
-2-6
-2-9
-2-12
-2-14 main identifiers in socket, ip protocol
+Client server architecture 
+    - server 
+        - always on host 
+        - permanent ip address
+        - data centers for scaling 
+    - clients
+        - communicate with server 
+        - may by intermittently connected 
+        - may have dynamic ip addresses 
+        - do not communicated directly with each other  
+P2P architecture
+    - no always on server 
+    - arbitrary end systems directly communicate 
+    - peers request service from other peers provide service in return to other peers
+    - peers are intermittently connected and change ip addresses   
+Sockets 
+    - process sends receives messages tof rom its socket 
+    - socket like door 
+        - sending process shoves messages out door 
+        - sending process relies on transport infrastructure on other side of door to deliver message to sockat at receiving process
+main identifiers in a socket are the ip and port 
 2-17 draw interaction
-2-21 dif between tcp and udp maybe draw
+tcp
+    - client must contact server 
+    - server process must first be running 
+    - server must have created socket that welcomes clients contact
+    - client contacts servery by creating tcp socket specifying ip and port number of server process
+    - client tcp establishes to server tcp
+    - when contacted by client server tcp creates new socket for server process to communicate with that particular client 
+    - allows server to talk woth multiple clients 
+    - source port numbrs used to distinguish clients 
+    - provides reliable in order byte stream transfer between client and server
+udp 
+    - no connection between client and server
+    - no handshaking before sending data    
+    - sender explicitly attaches ip and port to each packet
+    - recvr extracts sender ip addres and port from packet
+    - trasmitted data may be lost or received out of order 
+    - unreliable
 
-slides 7
-2-4 what is requirements for different apps
-2-5 comparisons tcp udp
-2-6
-2-8 
-2-11 calc questions
-what is rtt
+slides 7(4-1)
+Requirements 
+    - file transfer no data loss elastic throughput not time sensitive
+    - emal no data loss elastic throughput not time sensitive
+    - web documents no data loss elastic throughput not time sensitive
+    - real time audio/ video through put - aud 5kbps - 1mpbs video 10kbps - 5mps, yes sensitive to time 100's msec
+    - stored audio/bideo, loss tolerant same as before yes time sensitive few seconds
+    - games loss tolerant, through put is feew kbps up, time sensitive 100's msec
+    - text messaging no loss, elastic throughput , yes and no
+tcp 
+    - reliable transport between sending andreceiving process
+    - flow control sender wont overwhelm receiver
+    - congestion control - throttle sender when network overloaded
+    - does not provide timing minimum through put guarantee security
+    - connection oriented setup required between client and server processes
+    - one sender one receiver
+    - in order bystream
+    - piplined 
+    - full duplex data 
+        - bi directional data flow in same connection
+        - mss maximum segment size
+    - connection oriented 
+        - handshaking inits sender revericer state before data exchange 
+    - flow controlled sender will not overwhelm receiver
+udp 
+    - unreliable data transfer between sending and receiving process
+    - does not provide reliability flow cont4orl congestion contro.l timing through ut guarantee security or connection setup
+    - add reliablity at application layer 
+    - application specific error recovery
+    - no connection establishment which can add delay
+    - no connection state at sender receiver
+    - small header size
+    - no congestion control udp can blast away as fast as desired
+TCP types
+    - email, smtp
+    - remote terminal access telnet
+    - web http
+    - file transfer ftp
+    - streaming media http, rtp
+    - internet telephony, sip rtp, proprietary
+udp types
+    - streaming multimedia 
+    - internet telephony
+web and http  
+    - web page consists of objects 
+    - object can be html file jpeg image java applet audio file 
+    - web page consists of base html file which includes several referenced objects 
+    - each object is addressable by a url
+RTT 
+    - time for a small packet to travel from client to server and back
+2-11 calc questions, what is rtt
 2-18 a, c
 
-slides 8
-2-2 
-2-3
-2-5
-2-7 where store what is 
-2-9
-2-10 how it works, benefits
+slides 8 (5-1)
+HTTP request message   
+    - request  and response 
+Method types 
+    - HTTP 
+        - post
+        - delete 
+        - get
+        - put
+    - restful apis based onhttp
+    - json format
+    - xml format 
+HTTP response status codes
+    - appear in first line in server to client response message 
+    - 200, ok
+    - 301 moved permanently 
+    - 400 bad request
+    - 404 not found 
+    - 505 http version not supported
+cookies 
+    - four components 
+        - cookie header line of http response message
+        - cooke header in request 
+        - cookie file kept on users host managed by users browser
+        - back end database at website
+        - site creates unique id and entry in backend database for id
+    -used for 
+        - authorization 
+        - shopping carts 
+        - recommendations 
+        - user session state
+    - how to keep state 
+        - protocol endpoints maintain state at sender receiver over multiple transactions 
+        - http messages carry state
+Web caches
+    - satisfy client request without involving origin server
+    - user sets browser web access via caches
+    - browser sends all http requests to cache 
+        - object in cache cache returns object 
+        - else cache requests object from origin server then returns object to client 
+    - cache acts as both clent and server
+    - installed by isp 
+    - reduce response time for client request 
+    - reduce traffic on an institutions access link
+    - internet dence with caches enables poor content providers to effectively dilver content 
+FTP
+    - transfer file to from remote host
+    - client server model
+        - client side that initiates transfer 
+        - server remote host 
+    - ftp rfc 959 ftp server port 21
+ftp uses two ports for communication    
+    one to pass control information and is not used to send files on port 21 only controls information 
+    data connection on port 20 to send the data files between the client and the server
 2-12 how to calc avg delay 
-2-17
-2-18 why two ports for ftp
 
 slides 9
-2-4 
+Mail servers   
+    - mailbox containts incoming messages for user
+    - message queue of outgoing to be sent mail messages
+    - smtp protocol between mail servers to send email messages
+        - client sending mail server    
+        - server receiving mail server
 2-6 figure and name activities in steps
-2-8  what kind of service
-2-9 why not scalable
-2-10 real world 
-2-12
-2-13
-2-14
+DNS
+    - distributed database = implemented in hierarchy of many name servers
+    - application layer protocol - hosts name servers communicate to resolve names 
+        - core internet function implemented as application layer protocol 
+    - hostname to ip address translation
+    - host aliasing 
+    - mail server aliasing
+    - load distribution
+        - replicated webs ervers many ip addresses correspond to one name
+why DNS not scalable
+    - single point of failure
+    - traffic volume 
+    - ditant centralized database
+    - maintenance
+query dns server then query type of dns server (org com edu) then query actual website, then query for ip
+TLD authoritative servers  
+    - top level domain 
+        - responsible for com org net edu aero jobs museums and all top level country domains
+        - network solutions maintains server for .com TLD
+        - educause for edu TLD
+    - authoritave dns servers
+        - organizations own dns servers providing authoritative hostname to ip mappings for organizations named hosts
+        - can be maintained by organization or service providers
+Local DNS name server
+    - dos not strictly belong to heierarchy 
+    - each isp has one called defualt name server
+    - when host makes dns query query is sent to its local dns server
+        - has local cache of recent name to address translation pairs
+        - acts as proxy forwards query into hierarchy
+DNS name resolution 
+    - puts burden of name resolution on contacted name server
+    - heavy load at upper levels of hierarchy
 2-15 iterated  tell difference what are improvements, need to know how to describe draw it 
-2-20 how p2p file distrubtion works
-2-21
+    - contacted server replies with name of server to contact
+how p2p file distrubtion works
+    - file divided into 256kb chunks
+    - peers in torrent send receive file chunks
+    - tracker tracks peers participating in torrent 
+    - torrent group of peers exchanging chunks of a file 
+    - peer joins torrent 
+        - has no chunks but will accumulate them over time from other peers
+        - registers with tracker to get list of peers connects to sub set of peers 
+    - while downloading peer uplaods chunks to other peers
+    - peer my change peers with whom it exchanges chunks
+    - churn: peers may come and go 
+    - once peer has entire file it may leave or remain in torrent
 
 slides 10
-3-4 what is transport comunication 
-3-5 
+what is transport comunication 
+    - provides logical communication between app processes running on different hosts 
+    - trasnport protocols run in end systems 
+        - send side breaks app messges into segmens passes to network  layer
+        - rcv side reassembles segments into messages passes to app layer
+    - more then one transport protocol available to apps 
+        - tcp and udp
+transport vs network layer
+    - network layer logical communication between hosts
+    - transport layer locigal communication between processes
 3-7 how multi and demu works, using port numbers to differentiate 
-3-11
-3-12 why there is udp small header faster connection time
+    - multiplexing at sender   
+        - handle data from multiple sockets add transport header laster used for demulti
+    - demultiplexing at receiver 
+        - use header info to deliver received segments to correct socket 
+why there is udp small header faster connection time
 how to recover from bit errors, using acknoledgement system to recover from bit errors
 RDT 2.0
-3-21
-
-slides 11
+    - underlying channel may flip bits in packet   
+        - checksum to detect bit errors
+        - uses acknowledgements: receiver explicitly tells snder that pkt received is ok
+        - neg ack - receiver explicitly tells sender that pkt had errors
+        - sender retransmits pky on recept of NAK
+    - error detection
+    - feedback: ACK, NAK from receiver to sender
 RDT 3.0 
-3-30 adding timer 
+adding timer 
+    - waits reasonable amount of time for ACK
+    - retransmist if no ack received in this time
+    - if pkt or ack just delayed not lost   
+        - retransmission will be duplicate but seq #'s already handles this
+        - receiver must specify seq # of pkt being acknoledged
+    - requires countdown timer
 
 slides 12?
 rdt3.0 efficency very low  
 3-4 pipe line increases utilization
-3-6 go back n , selective
-3-7
-3-9 compare 
-3-14 
+pipelined protocols
+    - pipelining sender allows multiple in flight yet to be acked packets
+        - range of seq numbers must be increased 
+        - buffering at sender and or receiver
+    - two generic ofrms of piplined protocols go-back-n, selective reapeat 
+3-6 go back n 
+    - sender can have up to n unacked packets in pipline 
+    - receiver only sends cumulative ack
+        - doesnt ack packet if theres a gap
+    - sender has timer for oldest unacked packet
+        - when timer expires retransmit all unacked packets 
+selective
+    - sender can have up to n unacked packets in pipelined
+    - rcvr sends individual ack for each packet
+    - sender maintains timer for each unacked packet
+        - when timer expires retransmit only that unacked packet
+go-back-n sender
+    - k bit seq # in pkt header
+    - window of up to n consecutive unacked pkts allowed
+    - ack(n) acks all pkts up to including name
+        - may receive dups
+    - timer for oldest in flight pkt
+    - timeout(n) retransmit packt n and all higher seq # pkts in window
+compare
+Selective repeat
+    - receiver individually acks all correclt rcvd pkts
+        - buffers pkts as needed for eventuial in order deilvery to upper layer
+    - sender only resends pkts for which ack not rcvd 
+        - sender timer for each unacked pkt
+    - sender window
+        - n consecutive seq #'same
+        - limit sew #s of sent unacked pckts
+agreeing to establish a connectoin 
+    - 2 way handskae 
+        - varibale delays
+        - retransmitted messages due to message loss
+        - message reordering
+        - cant see other side
 3-15 3 way handshake 
 3-17 closing connection steps
-3-19
 3-20 important in practice but dont need for test
-3-21 
+TCP seq numbers acks
+    - seq numbers byte stream number of first byte in segments data
+    - acks seq # of next byte expected from other side, cummulative ack
 
 slide 6-2
-3-3
-3-4 flow control
+TCP flow control    
+    - application may remove data from tcp socket buffers
+    - receiver controls sender so s4ender wont overflow receivers buffer by transmitting too  much too fast
+    - receiver advertises free buffer space by including rwnd value in tcp header of receiver to sender segments 
+        - default is 4096 bytes
+    - sender limits amount of unacked data to reveicer rwnd value
+    - guarantees receive buffer will not overflow
 3-6 issues that cause congestion 
-3-9
-3-10
-3-11 triple duplicate acknoledgementG
-3-13
-3-14
-3-15
-inclass practice 
+    - informally too many sources sending too  much data too fast for network to handle
+    - different from flow control
+    - manifestiations 
+        - lost packets buffer overflow at routers
+        - long delays queue in router buffers
+TCP congestion control  
+    - approach sender increases transmission rate probing for usable bandwith until loss ocures
+        - additive increase increase cwnd by 1 mss every RTT until loss detected 
+        - multiplicative decrease cut cwnd in half after loss
+TCP slow start
+    - when connection begins increase rate exponentialy until first loss eventuial
+    - intial rate is slow but ramps up exponentialy fast
+3-11 triple duplicate acknoledgement
+    - resend unacked segment with smallest seq # 
+Detecting reacting to loss  
+    - loss indicated by timeout 
+        - cwnd set to 1 mss
+        - window then grows exp to threshold then grows linearly
+    - loss indicated by 3 dup acks
+        - dup acks indicate network capable of delivering segments 
+        - cwnd is cut in half window then grows linearly 
+    - tcp tahoe always sets cwnd to 1 timeout or 3 dup acks
+3-14 study image
+TCP congestion control 
+    - slow start    
+        - cwnd stats at 1mss cwndd doubles every RTT if no loss or triple duplicate ack until reaches the sstresh
+    - congestion avoidance or aimd period
+        - additive increase multiple decrease aimd after slow start to the sstresh cwnd is equivalent to ssthresh and they both increase linearly 
+    - tco tahoe
+        - time out cwnd reset to 1 mss sstrhesh cut down to half of the existing ssthresh 
+        - 3 dup acks the same as time out
+    - tcp reno
+        - time out - reset to 1 mss ssthresh cut down to half of the existing ssthresh 
+        - 3 dup - cwnd and ssthresh cut down to half
+3-16
 
 
 
