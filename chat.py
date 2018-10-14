@@ -102,6 +102,7 @@ class Client:
 # function that sends the message from a specific socket
 def sendMsg(index, message):
     i = index - 1
+    print("Message sent to ", peers[i].getpeername()[0])
     peers[i].send(bytes(message, 'utf-8'))
     
 
