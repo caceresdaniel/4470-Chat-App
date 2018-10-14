@@ -30,7 +30,6 @@ class Server:
     def run(self):
         while True:
             connection, address = listening_socket.accept()
-            print(address)
             connection_thread = threading.Thread(target=self.connection_handler, args=(connection,))
             connection_thread.daemon = True
             connection_thread.start()
@@ -43,7 +42,9 @@ class Server:
             # added try/except for when a client disconnects in a weird way
             try:
                 data = connection.recv(1024)
-                print(data.decode("utf-8"))
+                print('Message received from ', connection.getpeername()[0])
+                print('Sender’s Port: <', connection.getpeername()[1], '>')
+                print('Message: ', data.decode("utf-8"))
             except socket.error:
                 print('Peer ', connection.getpeername()[0], ' terminates the connection')
                 if len(peers) > 0 and connection in peers:
@@ -96,7 +97,9 @@ class Client:
                     peers.remove(connection)
                     connection.close()
                 break
-            print(data.decode("utf-8"))
+            print('Message received from ', connection.getpeername()[0])
+            print('Sender’s Port: <', connection.getpeername()[1], '>')
+            print('Message: ', data.decode("utf-8"))
 
 
 # function that sends the message from a specific socket
@@ -167,7 +170,7 @@ def help():
 
 # grabs the host from the corresponding socket
 def myip():
-    print("The IP address is: ", listening_socket.getsockname()[0], "\n")
+    print("The IP address is: ", listening_socket.getsockname()[0])
     menu()
 
 # grabs the port from the corresponding port
@@ -177,8 +180,23 @@ def myport():
 
 # first parses the string received then uses it with the class client to connect
 def connect(conString):
+    myip = listening_socket.getsockname()[0]
     socketInfo = conString.split(" ")
-    client = Client((socketInfo[1], int(socketInfo[-1])))
+    ip = socketInfo[1]
+    ipexists = False
+    for p in peers:
+        if myip == p.getpeername()[0]:
+            ipexists = True
+    # if len(peers) <= 2 and myip != ip and ipexists != True:
+    #     Client((socketInfo[1], int(socketInfo[-1])))
+    if len(peers) == 3:
+        print("Peer limit reached")
+    elif myip == ip:
+        print("Can not connect to your self please check the IP you wish to connect to")
+    elif ipexists == True:
+        print('Connectoin already exists can not recconnect to same connection')
+    else:
+        Client((socketInfo[1], int(socketInfo[-1])))
     menu()
 
 # lists all connections to and from the server using the list of sockets and a for loop
@@ -193,7 +211,7 @@ def connection_list():
 def send(senString):
     sendInfo = senString.split(" ", 2)
     index = int(sendInfo[1])
-    if int(sendInfo[1]) <= len(peers):
+    if (int(sendInfo[1]) <= len(peers)) and index != 0:
         msg = ''.join(sendInfo[2:])
         sendMsg(index, msg)
         menu()
@@ -207,7 +225,7 @@ def send(senString):
 def terminate(termString):
     termInfo = termString.split(" ")
     c = int(termInfo[1]) - 1
-    if int(termInfo[1]) <= len(peers):
+    if (int(termInfo[1]) <= len(peers)) and termInfo[1] != 0:
         peers[c].shutdown(socket.SHUT_RDWR)
         peers[c].close
         del peers[c]
