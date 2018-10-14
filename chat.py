@@ -187,7 +187,7 @@ def connect(conString):
     for p in peers:
         if ip == p.getpeername()[0]:
             ipexists = True
-    if len(peers) == 3:
+    if len(peers) > 2:
         print("Peer limit reached")
     elif myip == ip:
         print("Can not connect to your self please check the IP you wish to connect to")
