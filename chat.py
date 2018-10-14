@@ -197,6 +197,7 @@ def connect(conString):
         print('Connectoin already exists can not recconnect to same connection')
     else:
         Client((socketInfo[1], int(socketInfo[-1])))
+
     menu()
 
 # lists all connections to and from the server using the list of sockets and a for loop
