@@ -185,7 +185,7 @@ def connect(conString):
     ip = socketInfo[1]
     ipexists = False
     for p in peers:
-        if myip == p.getpeername()[0]:
+        if ip == p.getpeername()[0]:
             ipexists = True
     # if len(peers) <= 2 and myip != ip and ipexists != True:
     #     Client((socketInfo[1], int(socketInfo[-1])))
