@@ -194,10 +194,9 @@ def connect(conString):
     elif myip == ip:
         print("Can not connect to your self please check the IP you wish to connect to")
     elif ipexists == True:
-        print('Connectoin already exists can not recconnect to same connection')
+        print('Connection already exists can not reconnect to same connection')
     else:
         Client((socketInfo[1], int(socketInfo[-1])))
-
     menu()
 
 # lists all connections to and from the server using the list of sockets and a for loop
