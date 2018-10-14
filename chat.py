@@ -155,13 +155,13 @@ def menu():
 
 # lists the type of commands available
 def help():
-    print("myip \n   display IP address")
-    print("myport \n   display Port")
-    print("connect \n   connects to a specific IP and Port \n   example format - 'connect 127.0.0.0.1 4545'")
-    print("list \n   lists all connected peers")
-    print("send \n   sends a message to a selected connected peer \n   example format - 'send 2 hello how are you doing'")
-    print("terminate \n   terminates a specified connection")
-    print("exit \n   exits the program")
+    print("myip... \n   display IP address")
+    print("myport... \n   display Port")
+    print("connect... \n   connects to a specific IP and Port \n   example format - 'connect 127.0.0.0.1 4545'")
+    print("list... \n   lists all connected peers")
+    print("send... \n   sends a message to a selected connected peer \n   example format - 'send 2 hello how are you doing'")
+    print("terminate... \n   terminates a specified connection")
+    print("exit... \n   exits the program")
     menu()
 
 # grabs the host from the corresponding socket
@@ -192,9 +192,13 @@ def connection_list():
 def send(senString):
     sendInfo = senString.split(" ", 2)
     index = int(sendInfo[1])
-    msg = ''.join(sendInfo[2:])
-    sendMsg(index, msg)
-    menu()
+    if int(sendInfo[1]) <= len(peers):
+        msg = ''.join(sendInfo[2:])
+        sendMsg(index, msg)
+        menu()
+    else:
+        print("This peer does not exist please use the list function to properly find a peer to send a message too")
+        menu()
 
 # terminates specific peer connection by first splitting the string received into needed values
 # it then shuts down both the reading and writing end of the specific socket, and then closes the 
@@ -202,10 +206,14 @@ def send(senString):
 def terminate(termString):
     termInfo = termString.split(" ")
     c = int(termInfo[1]) - 1
-    peers[c].shutdown(socket.SHUT_RDWR)
-    peers[c].close
-    del peers[c]
-    menu()
+    if int(termInfo[1]) <= len(peers):
+        peers[c].shutdown(socket.SHUT_RDWR)
+        peers[c].close
+        del peers[c]
+        menu()
+    else:
+        print("This peer does not exist please use the list function to properly find a peer to terminate")
+        menu()
 
 # just says invalid command when an invalid command was input in the program
 def invalid():
